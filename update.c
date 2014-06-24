@@ -52,6 +52,39 @@ __RCSID("$NetBSD: update.c,v 1.12 2003/08/07 09:36:55 agc Exp $");
 
 #include "include.h"
 
+void print_plane(void)
+{
+    PLANE *pp;
+    FILE *f;
+    f=fopen("./atc_status","w");
+    fprintf(f,"%d\n",clck);
+    for(pp=air.head;pp!=NULL;pp=pp->next){
+        fprintf(f,"%d %d %d %d %d %d %d %d %d\n",
+            pp->plane_no,
+            pp->plane_type,
+            pp->xpos,
+            pp->ypos,
+            pp->altitude,
+            pp->dest_no,
+            pp->dest_type,
+            pp->fuel,
+            pp->dir);
+    }
+    for(pp=ground.head;pp!=NULL;pp=pp->next){
+        fprintf(f,"%d %d %d %d %d %d %d %d %d\n",
+            pp->plane_no,
+            pp->plane_type,
+            pp->xpos,
+            pp->ypos,
+            pp->altitude,
+            pp->dest_no,
+            pp->dest_type,
+            pp->fuel,
+            pp->dir);
+    }
+    fclose(f);
+}
+
 void
 update(dummy)
 	int dummy __attribute__((__unused__));
@@ -213,6 +246,7 @@ update(dummy)
 	if ((rand() % sp->newplane_time) == 0)
 		addplane();
 
+    print_plane();
 #ifdef SYSV
 	alarm(sp->update_secs);
 #endif
