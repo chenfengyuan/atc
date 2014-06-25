@@ -22,7 +22,8 @@ def read_file(filename):
         while True:
             line = f.readline()
             if line:
-                sw.write(line.encode('utf-8'))
+                tornado.ioloop.IOLoop.instance().add_callback(
+                    lambda sw_, line_: sw_.write(line_.encode('utf-8')), sw, line)
             else:
                 time.sleep(0.01)
     t = threading.Thread(target=read)
@@ -42,7 +43,9 @@ def write_file(filename):
         def on_data(data):
             f.write(data)
 
-        sr.read_until_close(on_data, on_data)
+        def dummy2():
+            sr.read_until_close(on_data, on_data)
+        tornado.ioloop.IOLoop.instance().add_callback(dummy2)
     t = threading.Thread(target=dummy)
     t.daemon = True
     t.start()
