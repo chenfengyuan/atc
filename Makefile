@@ -34,6 +34,7 @@ LEX := flex
 YACC := bison
 SOURCES := main.c tunable.c update.c extern.c graphics.c input.c list.c log.c lex.c grammar.c
 
+all: atc
 grammar.c:	grammar.y
 	$(YACC) -d grammar.y
 	mv grammar.tab.c $@
@@ -51,5 +52,4 @@ atc: $(SOURCES)
 	gcc $(CFLAGS) $(SOURCES) $(LIBS) -o atc
 clean:
 	rm -f $(CLEANFILES)
-all: atc
 	
