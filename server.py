@@ -35,14 +35,17 @@ def write_file(filename):
     pr, pw = os.pipe()
     sw = tornado.iostream.PipeIOStream(pw)
 
-    f = open(filename, 'wb', 0)
-    sr = tornado.iostream.PipeIOStream(pr)
+    def dummy():
+        f = open(filename, 'wb', 0)
+        sr = tornado.iostream.PipeIOStream(pr)
 
-    def on_data(data):
-        f.write(data)
+        def on_data(data):
+            f.write(data)
 
-    sr.read_until_close(on_data, on_data)
-
+        sr.read_until_close(on_data, on_data)
+    t = threading.Thread(target=dummy)
+    t.daemon = True
+    t.start()
     return sw
 
 
