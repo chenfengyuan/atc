@@ -73,12 +73,15 @@ class Action(tornado.web.RequestHandler):
 def main():
     status = {'data': ''}
 
-    def on_in_data(data):
-        status['data'] = data.decode('utf-8')
-
     sin = read_file('atc_status')
+
+    def on_in_data(data):
+        sin.read_until(b'\n\n', on_in_data)
+        status['data'] = data.decode('utf-8')
+        status['update_time'] = time.time()
     sout = write_file('action')
-    sin.read_until_close(on_in_data, on_in_data)
+    #sin.read_until_close(on_in_data, on_in_data)
+    sin.read_until(b'\n\n', on_in_data)
     application = tornado.web.Application(
         [[r'.*', Action, dict(status=status, action_stream=sout)]])
     application.listen(14200)

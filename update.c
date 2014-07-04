@@ -56,7 +56,18 @@ void print_plane(void)
 {
     PLANE *pp;
     FILE *f;
+    int i;
     f=fopen("./atc_status","w");
+    fprintf(f, "%d %d %d\n", sp->width, sp->height, sp->update_secs);
+    fprintf(f, "%d ", sp->num_exits);
+    for(i=0;i<sp->num_exits;++i){
+        fprintf(f, "%d %d %d ", sp->exit[i].x, sp->exit[i].y, sp->exit[i].dir);
+    }
+    fprintf(f, "\n%d ", sp->num_airports);
+    for(i=0;i<sp->num_airports;++i){
+        fprintf(f, "%d %d %d ", sp->airport[i].x, sp->airport[i].y, sp->airport[i].dir);
+    }
+    fprintf(f, "\n");
     fprintf(f,"%d\n",clck);
     for(pp=air.head;pp!=NULL;pp=pp->next){
         fprintf(f,"%d %d %d %d %d %d %d %d %d\n",
@@ -82,6 +93,7 @@ void print_plane(void)
             pp->fuel,
             pp->dir);
     }
+    fprintf(f, "\n");
     fclose(f);
 }
 
