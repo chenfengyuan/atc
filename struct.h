@@ -95,7 +95,7 @@ typedef struct {
 } LIST;
 
 typedef struct {
-	char	name[10];
+	char	name[256];
 	char	host[256];
 	char	game[256];
 	int	planes;
@@ -103,7 +103,7 @@ typedef struct {
 	int	real_time;
 } SCORE;
 
-#define SCORE_SCANF_FMT	"%9s %255s %255s %d %d %d"
+#define SCORE_SCANF_FMT	"%255s %255s %255s %d %d %d"
 
 typedef struct displacement {
 	int	dx;
